@@ -1,0 +1,101 @@
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    r2_score,
+    mean_squared_error,
+    mean_absolute_error
+)
+
+# =========================
+# 1. Load Dataset
+# =========================
+
+df = pd.read_csv("emails.csv")
+
+# Remove missing values
+df = df.dropna()
+
+print("Dataset shape:", df.shape)
+
+
+# =========================
+# 2. Create Features and Target
+# =========================
+
+# Email No. is only an ID, so remove it
+# Prediction is the target column
+X = df.drop(columns=['Email No.', 'Prediction'])
+y = df['Prediction']
+
+print("X shape:", X.shape)
+print("y shape:", y.shape)
+
+
+# =========================
+# 3. Train-Test Split
+# =========================
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.20,
+    random_state=42
+)
+
+
+# =========================
+# 4. KNN
+# =========================
+
+KNN = KNeighborsClassifier(n_neighbors=5)
+
+KNN.fit(X_train, y_train)
+
+p1 = KNN.predict(X_test)
+
+print("\n========== KNN ==========")
+
+print("Accuracy:", accuracy_score(y_test, p1))
+
+print("R2:", r2_score(y_test, p1))
+
+print("RMSE:", mean_squared_error(y_test, p1) ** 0.5)
+
+print("MAE:", mean_absolute_error(y_test, p1))
+
+print("MSE:", mean_squared_error(y_test, p1))
+
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, p1))
+
+
+# =========================
+# 5. SVM
+# =========================
+
+SVM = SVC()
+
+SVM.fit(X_train, y_train)
+
+p2 = SVM.predict(X_test)
+
+print("\n========== SVM ==========")
+
+print("Accuracy:", accuracy_score(y_test, p2))
+
+ print("R2:", r2_score(y_test, p2))
+
+print("RMSE:", mean_squared_error(y_test, p2) ** 0.5)
+
+print("MAE:", mean_absolute_error(y_test, p2))
+
+print("MSE:", mean_squared_error(y_test, p2))
+
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, p2))

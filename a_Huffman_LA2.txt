@@ -1,0 +1,82 @@
+import java.util.*;
+
+public class HuffmanEncoding {
+
+    static class Node {
+        char ch;
+        int freq;
+        Node left, right;
+
+        Node(char ch, int freq) {
+            this.ch = ch;
+            this.freq = freq;
+        }
+
+        Node(int freq, Node left, Node right) {
+            this.freq = freq;
+            this.left = left;
+            this.right = right;
+        }
+    }
+
+    static HashMap<Character, String> code = new HashMap<>();
+
+    static void makeCode(Node root, String s) {
+        if (root.left == null && root.right == null) {
+            code.put(root.ch, s);
+            return;
+        }
+
+        makeCode(root.left, s + "0");
+        makeCode(root.right, s + "1");
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter a string: ");
+        String str = sc.nextLine();
+
+        // Count frequency
+        HashMap<Character, Integer> freq = new HashMap<>();
+
+        for (char c : str.toCharArray()) {
+    if (freq.containsKey(c))
+        freq.put(c, freq.get(c) + 1);
+    else
+        freq.put(c, 1);
+}
+
+        // Create priority queue
+        PriorityQueue<Node> q =
+            new PriorityQueue<>((a, b) -> a.freq - b.freq);
+
+        for (char c : freq.keySet()) {
+            q.add(new Node(c, freq.get(c)));
+        }
+
+        // Create Huffman tree
+        while (q.size() > 1) {
+            Node a = q.poll();
+            Node b = q.poll();
+
+            q.add(new Node(a.freq + b.freq, a, b));
+        }
+
+        // Generate codes
+        makeCode(q.poll(), "");
+
+        System.out.println("\nCharacter Frequencies:");
+        for (char c : freq.keySet()) {
+            System.out.println(c + " : " + freq.get(c));
+        }
+
+        System.out.println("\nHuffman Codes:");
+        for (char c : code.keySet()) {
+            System.out.println(c + " : " + code.get(c));
+        }
+
+        sc.close();
+    }
+}

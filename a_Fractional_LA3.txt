@@ -1,0 +1,74 @@
+import java.util.Arrays;
+import java.util.Scanner;
+public class LA2 {
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the number of items in bag");
+        int n = sc.nextInt();
+
+        float[] weight = new float[n];
+        float[] value = new float[n];
+        float[] ratio = new float[n];
+
+        System.out.println("Enter each items weigght and value respectively");
+
+        for(int i=0;i<n;i++){
+            System.out.println("Enter the weight and value of item : "+(i+1));
+            weight[i] = sc.nextFloat();
+            value[i] = sc.nextFloat();
+
+            ratio[i] = value[i] / weight[i];
+        }
+
+
+        for(int i=0;i<n;i++){
+            for(int j=i+1;j<n;j++){
+                if(ratio[i]<ratio[j]){
+                    float temp = ratio[i];
+                    ratio[i] = ratio[j];
+                    ratio[j] = temp;
+
+                    temp = weight[i];
+                    weight[i] = weight[j];
+                    weight[j] = temp;
+
+
+                    temp = value[i];
+                    value[i] = value[j];
+                    value[j] = temp;
+                }
+            }
+        }
+
+
+        
+
+        System.out.println(Arrays.toString(ratio));
+
+
+        System.out.println("Enter the capacity of the bag");
+        float W = sc.nextFloat();
+
+        float profit = 0;
+
+        for(int i=0;i<n;i++){
+            if(W>=weight[i]){
+                W = W - weight[i];
+                profit = profit + value[i];
+            }else {
+                profit = profit + (ratio[i]*W);
+                break;
+            }
+        }
+
+
+
+
+
+        System.out.println("Maximum profit is : "+profit);
+        sc.close();
+
+
+
+    }
+}

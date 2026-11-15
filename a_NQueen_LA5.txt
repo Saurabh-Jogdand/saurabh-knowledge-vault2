@@ -1,0 +1,141 @@
+import java.util.*;
+
+public class NQueen {
+
+
+    static boolean isSafeToPlace(int rowIndex,int colIndex , char[][] board , int n){
+
+        int row = rowIndex;
+        int col = colIndex; 
+
+        //check left horizontal : 
+
+        while(col>=0){ 
+            if(board[row][col]=='Q'){
+                return false;
+            }
+
+            col--;
+        }
+
+
+        //left upper diafonal checking : 
+        row = rowIndex;
+        col = colIndex; 
+
+        while(row>=0 && col>=0){
+            if(board[row][col]=='Q'){
+                return false;
+            }
+
+            col = col - 1; 
+            row = row - 1; 
+
+        }
+
+
+        //left lower diagonal : 
+
+        row = rowIndex;
+        col = colIndex; 
+
+        while(row < n && col>=0){ 
+            if(board[row][col]=='Q'){
+                return false; 
+            }
+
+            row = row + 1 ; 
+            col = col - 1; 
+        }
+
+
+
+
+
+
+        return true;
+    }
+
+
+
+    static void solve(char[][] board,int n,int colIndex,List<List<String>> ans){
+
+        if(colIndex >=n){
+
+            List<String> temp = new ArrayList<>();
+
+            for(int i=0;i<n;i++){
+                temp.add(new String(board[i]));
+            }
+
+            ans.add(temp);
+
+            return;
+        }
+
+        for(int rowIndex = 0;rowIndex<n;rowIndex++){
+
+            if(isSafeToPlace(rowIndex,colIndex,board,n)){
+                
+                board[rowIndex][colIndex] = 'Q';
+                
+                solve(board,n,colIndex+1,ans);
+                
+                board[rowIndex][colIndex] = '.';
+
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+    
+
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter the value of n : ");
+        int n = sc.nextInt();
+
+        char[][] board = new char[n][n];
+
+        for(int i=0;i<n;i++){
+            Arrays.fill(board[i],'.');
+        }
+
+
+        
+        
+        int colIndex = 0 ; 
+        
+        List<List<String>> ans = new ArrayList<>();
+
+        solve(board,n,colIndex,ans);
+
+        if(ans.size()==0){
+
+            System.out.println("Total No. Of Possible Solutions are : "+ans.size());
+        }
+        else { 
+
+            System.out.println("\nTotal solutions: " + ans.size());
+
+            for (List<String> solution : ans) {
+
+                System.out.println("\nN-Queens Solution:");
+
+                for (String row : solution) {
+                    System.out.println(row);
+                }
+            }
+        }
+
+    }
+}
