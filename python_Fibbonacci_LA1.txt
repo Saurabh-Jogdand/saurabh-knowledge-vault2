@@ -1,0 +1,84 @@
+import time
+# Non-recursive (loop)
+def fib_iterative(n):
+    a = 0
+    b = 1
+    for i in range(n):
+        a, b = b, a + b
+    return a
+# Recursive
+def fib_recursive(n):
+    if n <= 1:
+        return n
+    return fib_recursive(n - 1) + fib_recursive(n - 2)
+n = int(input("Enter n: "))
+start = time.time()
+print("Iterative result:", fib_iterative(n))
+print("Iterative time  :", time.time() - start)
+start = time.time()
+print("Recursive result:", fib_recursive(n))
+print("Recursive time  :", time.time() - start)
+print("\nIterative -> Time: O(n),   Space: O(1)")
+print("Recursive -> Time: O(2^n), Space: O(n) (call stack)")
+
+
+
+
+
+
+
+
+import heapq
+from collections import Counter
+text = input("Enter text: ")
+# Step 1: count frequency of each character
+freq = Counter(text)
+# Step 2: put every character in a min-heap as [frequency, [char, code]]
+heap = []
+for ch in freq:
+    heap.append([freq[ch], [ch, ""]])
+heapq.heapify(heap)
+# Step 3: repeatedly merge the two smallest nodes
+while len(heap) > 1:
+    low = heapq.heappop(heap)
+    high = heapq.heappop(heap)
+    for pair in low[1:]:
+        pair[1] = "0" + pair[1]       # left side gets 0
+    for pair in high[1:]:
+        pair[1] = "1" + pair[1]       # right side gets 1
+    heapq.heappush(heap, [low[0] + high[0]] + low[1:] + high[1:])
+# Step 4: read the codes
+codes = {}
+for ch, code in heap[0][1:]:
+    codes[ch] = code or "0"
+print("\nCharacter  Code")
+for ch in codes:
+    print(repr(ch), "     ", codes[ch])
+encoded = ""
+for ch in text:
+    encoded += codes[ch]
+print("\nEncoded text:", encoded)
+
+
+
+
+n = int(input("Number of items: "))
+values = list(map(int, input("Enter values: ").split()))
+weights = list(map(int, input("Enter weights: ").split()))
+capacity = int(input("Knapsack capacity: "))
+# Step 1: value/weight ratio for each item
+items = []
+for i in range(n):
+    items.append((values[i] / weights[i], values[i], weights[i]))
+# Step 2: highest ratio first (greedy choice)
+items.sort(reverse=True)
+# Step 3: take whole items; take a fraction of the last one
+total = 0
+for ratio, value, weight in items:
+    if capacity >= weight:
+        total += value
+        capacity -= weight
+    else:
+        total += ratio * capacity
+        break
+print("Maximum value:", total)
